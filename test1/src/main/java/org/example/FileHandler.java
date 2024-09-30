@@ -5,17 +5,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class FileHandler implements Runnable {
-    private Socket clientSocket;
-    private static final String BASE_DIRECTORY = "/mnt/parameters"; // 볼륨 마운트 경로
+    private final Socket clientSocket;
+    //    private static final String BASE_DIRECTORY = "/mnt/parameters"; // 볼륨 마운트 경로
+    private static final String BASE_DIRECTORY = "D:\\INL\\backend\\test1\\parameters"; // 볼륨 마운트 경로
+    private final AtomicInteger connectedClients; // 현재 연결된 클라이언트 수
+    private final AtomicInteger completedClients; // 파일 전송 완료된 클라이언트 수
 
-
-    public FileHandler(Socket socket) {
+    public FileHandler(Socket socket, AtomicInteger connectedClients, AtomicInteger completedClients) {
         this.clientSocket = socket;
+        this.connectedClients = connectedClients;
+        this.completedClients = completedClients;
+        connectedClients.incrementAndGet(); // 새로운 클라이언트가 연결될 때마다 클라이언트 수 증가
     }
 
     @Override
@@ -26,7 +33,7 @@ class FileHandler implements Runnable {
         try {
             // 클라이언트로부터 파일을 수신
             InputStream inputStream = clientSocket.getInputStream();
-            Scanner scanner = new Scanner(inputStream, "UTF-8");
+            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
 
             // 파일 이름을 구분자 (줄바꿈 '\n') 까지 읽어들임
             if (scanner.hasNextLine()) {
@@ -43,7 +50,6 @@ class FileHandler implements Runnable {
                 directory.mkdirs(); // 폴더가 존재하지 않으면 생성
             }
 
-
             // 파일 저장
             FileOutputStream fileOutputStream = new FileOutputStream(new File(directory, uniqueFileName));
 
@@ -58,10 +64,12 @@ class FileHandler implements Runnable {
             clientSocket.close();
 
             // 모니터링 정보 출력
-            System.out.println(getNow() + " File received: " + uniqueFileName);
-            System.out.println(getNow() + " File size: " + fileSize + " bytes");
-            System.out.println(getNow() + " Client IP: " + clientSocket.getInetAddress().getHostAddress());
-            System.out.println(getNow() + " Client Port: " + clientSocket.getPort());
+            System.out.println(getCurrentTimestamp() + "Client IP: " + clientSocket.getInetAddress().getHostAddress());
+            System.out.println(getCurrentTimestamp() + "File received: " + uniqueFileName + " (" + fileSize + " bytes)");
+
+            // 파일 수신이 완료된 클라이언트 수 증가
+            int completed = completedClients.incrementAndGet();
+            System.out.println(getCurrentTimestamp() + "Completed clients: " + completed);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,17 +81,15 @@ class FileHandler implements Runnable {
         String timestamp = String.valueOf(System.currentTimeMillis());
         int dotIndex = originalFileName.lastIndexOf(".");
         if (dotIndex != -1) {
-            // 확장자가 있을 경우, 파일명 + 타임스탬프 + 확장자 형태로 파일 이름을 생성
             return originalFileName.substring(0, dotIndex) + "_" + timestamp + originalFileName.substring(dotIndex);
         } else {
-            // 확장자가 없을 경우, 파일명 + 타임스탬프
             return originalFileName + "_" + timestamp;
         }
     }
 
-    private String getNow(){
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(("yyyy-MM-dd HH:mm:ss"));
-        return "[" + now.format(formatter) + "]";
+    // 시간 포맷팅 함수
+    private String getCurrentTimestamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return "[" + LocalDateTime.now().format(formatter) + "] ";
     }
 }
