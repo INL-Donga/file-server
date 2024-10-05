@@ -7,7 +7,7 @@ RUN pwd
 RUN chmod +x ./gradlew
 
 # 4. Gradle을 사용하여 프로젝트를 빌드하고 JAR 생성 (테스트 생략)
-RUN ./gradlew build -x test 
+RUN /var/jenkins_home/workspace/test/test1/gradlew build -x test 
 
 # 5. 런타임 단계 (최종 이미지를 위한 단계)
 FROM openjdk:17-jdk-slim
