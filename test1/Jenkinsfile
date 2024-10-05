@@ -34,7 +34,7 @@ pipeline {
                       --set registryServer=docker.io,registryUser=twkji \
                       --namespace default \
                       file-server \
-                  /helm/file-server'
+                  ./helm/file-server'
               }
             }
         }
