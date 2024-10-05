@@ -23,7 +23,7 @@ class FileHandler implements Runnable {
 
             while (true) {
 
-
+//                if(!FileServer.isRunning) continue;
 
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
@@ -50,6 +50,10 @@ class FileHandler implements Runnable {
                 Thread.sleep(5);
                 // 클라이언트 완료 처리
                 roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
+                    OutputStream outputStream = clientSocket.getOutputStream();
+                    String msg = Integer.toString(roundManager.getRound());
+                    outputStream.write(msg.getBytes());
+                    outputStream.flush();
             }
 
         }

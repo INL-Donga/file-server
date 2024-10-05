@@ -17,6 +17,7 @@ def send_msg_from_server():
                 response1 = s.recv(1024)  # 최대 1024바이트 수신
                 print(4)
                 complete_message = response1.decode('utf-8').strip()  # 문자열 디코딩
+
                 print(f"첫 번째 메시지: {complete_message}")
                 i = i+1
                 # 두 번째 데이터 (roundManager.getConnectedClients())

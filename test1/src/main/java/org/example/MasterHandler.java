@@ -27,34 +27,30 @@ public class MasterHandler implements Runnable {
         try {
             while (true) {
                 // localhost 의 .py 로 부터 .pt 업로드 완료 수신
-                // 클라이언트로부터 파일을 수신
+                // 마스터로부터 수신
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                 String message = reader.readLine().trim();  // 메시지 수신
-                System.out.println("Received message: " + message);
+                System.out.println("Received message from master: " + message + "_" + clientSocket.getInetAddress());
 
 
                 if (Integer.parseInt(message) != roundManager.getRound()) {
-                    System.out.println("round mismatch");
+                    System.out.println("[]round mismatch");
 //                    System.exit(1); // 프로그램 비정상종료 종료
                     // 클라이언트로 보내기?
                 }
 
-                System.out.println("send Round Number to client");
-                // 문제점 1. 클라이언트 정보를 받아와야 돼
-                if(clientList.size() != 0){
-                    for (Socket client : clientList) {
-                        OutputStream outputStream = client.getOutputStream();
-                        String msg = Integer.toString(roundManager.getRound());
-                        outputStream.write(msg.getBytes());
-                        outputStream.flush();
-                    }
-                }
 
+ 
 
                 while (true) {
-                    if (clientList.size() == roundManager.getCompletedClients()) {
+
+                    String message1 = reader.readLine().trim();  // 메시지 수신
+
+                    System.out.println("Received message from master: " + message1 + "_" + clientSocket.getInetAddress());
+                    if (roundManager.getConnectedClients() == roundManager.getCompletedClients() && clientList.size()!=0) {
+                        System.out.println("send to master complete message and client counts");
                         OutputStream outputStream = clientSocket.getOutputStream();
                         String msg = "complete ";
                         outputStream.write(msg.getBytes());

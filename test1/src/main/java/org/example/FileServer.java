@@ -13,7 +13,8 @@ public class FileServer {
 
     public static int client_count = 0;
 
-    private static volatile boolean isRunning = true;
+    public static boolean isRunning = false;
+
     private static List<Socket> clientList = new ArrayList<>();  // 클라이언트 리스트 전역 변수
     // 전역변수 배열로 client List => 마스터 핸들러에 주기
     public static void main(String[] args) {
@@ -36,6 +37,7 @@ public class FileServer {
                     synchronized (clientList) {
                         clientList.add(clientSocket);
                     }
+
 
                     OutputStream outputStream = clientSocket.getOutputStream();
                     String msg = Integer.toString(FileServer.client_count);
