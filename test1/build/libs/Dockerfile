@@ -1,7 +1,7 @@
 # 1. 빌드 단계 (Gradle을 사용하여 프로젝트 빌드)
 FROM gradle:7.6.0-jdk17 AS builder
 WORKDIR /var/jenkins_home/workspace/test/test1
-
+RUN pwd
 
 # Gradle Wrapper 실행 권한 설정
 RUN chmod +x ./gradlew
