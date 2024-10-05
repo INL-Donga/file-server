@@ -26,24 +26,24 @@ pipeline {
               }
             }
         }
-        stage('Run') {
-            steps {
-              echo "Deleting existing release (if any)"
-              // 기존 Helm 릴리스를 삭제
-              sh '''
-                helm uninstall file-server --namespace devops-tools || true
-              '''
-              echo "Deploying new release"
-              // 새로운 Helm 릴리스를 설치
-              dir ('./test1') { 
-                sh '''
-                  helm install file-server ./helm/file-server \
-                    --atomic \
-                    --set registryServer=docker.io,registryUser=twkji \
-                    --namespace devops-tools
-                '''
-              }
-            }
-        }
+        // stage('Run') {
+        //     steps {
+        //       echo "Deleting existing release (if any)"
+        //       // 기존 Helm 릴리스를 삭제
+        //       sh '''
+        //         helm uninstall file-server --namespace devops-tools || true
+        //       '''
+        //       echo "Deploying new release"
+        //       // 새로운 Helm 릴리스를 설치
+        //       dir ('./test1') { 
+        //         sh '''
+        //           helm install file-server ./helm/file-server \
+        //             --atomic \
+        //             --set registryServer=docker.io,registryUser=twkji \
+        //             --namespace devops-tools
+        //         '''
+        //       }
+        //     }
+        // }
     }
 }
