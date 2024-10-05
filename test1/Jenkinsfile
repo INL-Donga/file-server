@@ -32,7 +32,7 @@ pipeline {
               dir ('./test1') { 
                 sh 'helm upgrade --install --atomic \
                       --set registryServer=docker.io,registryUser=twkji \
-                      --namespace default \
+                      --namespace devops-tools \
                       file-server \
                   ./helm/file-server'
               }
