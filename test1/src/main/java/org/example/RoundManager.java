@@ -10,7 +10,7 @@ public class RoundManager {
 
     // 싱글톤 패턴으로 RoundManager 생성
     private RoundManager() {
-        this.round = new AtomicInteger(1);  // 초기 라운드 1로 시작
+        this.round = new AtomicInteger(0);  // 초기 라운드 0로 시작
         this.connectedClients = new AtomicInteger(0);  // 처음엔 0명
         this.completedClients = new AtomicInteger(0);  // 처음엔 0명
     }
@@ -34,6 +34,8 @@ public class RoundManager {
         return round.get();
     }
 
+    public int getConnectedClients() {return connectedClients.get();};
+
     // 클라이언트가 파일 전송을 완료할 때마다 호출
     public synchronized void clientCompleted() {
         int completed = completedClients.incrementAndGet();
@@ -52,4 +54,6 @@ public class RoundManager {
         completedClients.set(0);  // 완료된 클라이언트 수 초기화
         System.out.println("Round updated to: " + round.get());
     }
+
+    public int getCompletedClients() {return completedClients.get();};
 }
