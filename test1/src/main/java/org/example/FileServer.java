@@ -3,12 +3,15 @@ package org.example;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileServer {
+
+    public static int client_count = 0;
 
     private static volatile boolean isRunning = true;
     private static List<Socket> clientList = new ArrayList<>();  // 클라이언트 리스트 전역 변수
@@ -33,6 +36,13 @@ public class FileServer {
                     synchronized (clientList) {
                         clientList.add(clientSocket);
                     }
+
+                    OutputStream outputStream = clientSocket.getOutputStream();
+                    String msg = Integer.toString(FileServer.client_count);
+                    FileServer.client_count++;
+                    outputStream.write(msg.getBytes());
+                    outputStream.flush();
+
                     System.out.println("Client connected. Total connected clients: " + roundManager.getConnectedClients());
                 }
 

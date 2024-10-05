@@ -41,28 +41,31 @@ public class MasterHandler implements Runnable {
 //                    System.exit(1); // 프로그램 비정상종료 종료
                     // 클라이언트로 보내기?
                 }
-                    // 문제점 1. 클라이언트 정보를 받아와야 돼
-                    for (Socket client : clientList) {
-                        OutputStream outputStream = client.getOutputStream();
-                        String msg = Integer.toString(roundManager.getRound());
-                        outputStream.write(msg.getBytes());
-                        outputStream.flush();
-                    }
 
-                    while (true) {
-                        if (clientList.size() == roundManager.getCompletedClients()) {
-                            OutputStream outputStream = clientSocket.getOutputStream();
-                            String msg = "complete ";
-                            outputStream.write(msg.getBytes());
-                            outputStream.write(roundManager.getConnectedClients());
-                            outputStream.flush();
-                            break;
-                        }
-                    }
-
+                System.out.println("fdsfsdfds");
+                // 문제점 1. 클라이언트 정보를 받아와야 돼
+                for (Socket client : clientList) {
+                    OutputStream outputStream = client.getOutputStream();
+//                        String msg = Integer.toString(roundManager.getRound());
+                    String msg = "fsdfsdfsd";
+                    outputStream.write(msg.getBytes());
+                    outputStream.flush();
                 }
 
-            
+                while (true) {
+                    if (clientList.size() == roundManager.getCompletedClients()) {
+                        OutputStream outputStream = clientSocket.getOutputStream();
+                        String msg = "complete ";
+                        outputStream.write(msg.getBytes());
+                        outputStream.write(roundManager.getConnectedClients());
+                        outputStream.flush();
+                        break;
+                    }
+                }
+
+            }
+
+
 
 
         } catch (IOException ex) {

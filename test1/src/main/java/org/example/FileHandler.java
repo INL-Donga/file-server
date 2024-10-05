@@ -24,12 +24,12 @@ class FileHandler implements Runnable {
             while (true) {
 
 
-                System.out.println("test2");
+
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                 String message = reader.readLine().trim();  // 메시지 수신
-                System.out.println("Received message: " + message);
+                System.out.println("FileHandler Received message: " + message);
 
                 String clientIp = clientSocket.getInetAddress().getHostAddress();
                 String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
@@ -37,7 +37,7 @@ class FileHandler implements Runnable {
                 String lastThreeDigits = lastPart.length() > 3 ? lastPart.substring(lastPart.length() - 3) : lastPart;
 
 
-                System.out.println("test");
+                System.out.println("FileHandler End");
 
                 // 클라이언트 완료 처리
                 roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
