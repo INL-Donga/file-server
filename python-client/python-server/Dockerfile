@@ -12,4 +12,4 @@ COPY . /app
 # RUN pip install -r requirements.txt
 
 # 5. Python 파일 실행
-CMD ["python", "your_script_name.py"]
+CMD ["python", "python-server.py"]
