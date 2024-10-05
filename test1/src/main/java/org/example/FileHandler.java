@@ -63,8 +63,9 @@ class FileHandler implements Runnable {
             fileOutputStream.close();
 
             OutputStream outputStream = clientSocket.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
-            writer.println("통신테스트");
+            String msg = "ok";
+            outputStream.write(msg.getBytes());
+            outputStream.flush();
 
             clientSocket.close();
 
