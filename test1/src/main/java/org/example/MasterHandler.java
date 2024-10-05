@@ -5,8 +5,10 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MasterHandler implements Runnable {
     private final Socket clientSocket;
@@ -25,8 +27,13 @@ public class MasterHandler implements Runnable {
         try {
             while (true) {
                 // localhost 의 .py 로 부터 .pt 업로드 완료 수신
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String message = in.readLine();
+                // 클라이언트로부터 파일을 수신
+                System.out.println("test1");
+                InputStream inputStream = clientSocket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
+                String message = reader.readLine().trim();  // 메시지 수신
+                System.out.println("Received message: " + message);
 
 
                 if (Integer.parseInt(message) != roundManager.getRound()) {

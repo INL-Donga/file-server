@@ -9,7 +9,8 @@ def send_msg_from_server():
         s.connect(server_address)
         # 서버에 데이터를 요청하는 과정 (필요에 따라 수정 가능)
         print(1)
-        s.sendall((0).to_bytes(1, 'big'))  # 0을 전송 (예시)
+        msg = "0\n"
+        s.sendall(msg.encode('utf-8'))  # 0을 전송 (예시)
         print(2)
         while (1):
             time.sleep(5)
@@ -27,4 +28,5 @@ def send_msg_from_server():
             print(f"연결된 클라이언트 수: {connected_clients}")
 
 
-send_msg_from_server()
+if __name__ == "__main__":
+    send_msg_from_server()

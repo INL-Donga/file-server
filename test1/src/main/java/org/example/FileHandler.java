@@ -18,71 +18,30 @@ class FileHandler implements Runnable {
 
     @Override
     public void run() {
-        long fileSize = 0;
-        String originalFileName = "";
 
         try {
-            // localhost 의 .py 로 부터 .pt 업로드 완료 수신
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String message = in.readLine();
 
-            // 클라이언트로부터 텍스트(Round Number)를 수신
-//            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//            String message = in.readLine();
-
-//            // 클라이언트로부터 파일을 수신
-//            InputStream inputStream = clientSocket.getInputStream();
-//            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
-//
-//            // 파일 이름을 구분자 (줄바꿈 '\n') 까지 읽어들임
-//            if (scanner.hasNextLine()) {
-//                originalFileName = scanner.nextLine().trim();  // 파일 이름 수신
-//            }
-            // Client IP 정보 수집
-            String clientIp = clientSocket.getInetAddress().getHostAddress();
-            String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
-            String lastPart = ipParts[ipParts.length - 1];  // 마지막 부분을 가져옴
-
-// 마지막 3자리만 가져옴 (3자리가 안 될 경우는 그대로 출력)
-            String lastThreeDigits = lastPart.length() > 3 ? lastPart.substring(lastPart.length() - 3) : lastPart;
-            // Python 통신 코드
+            while (true) {
 
 
+                System.out.println("test2");
+                InputStream inputStream = clientSocket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-//            FileName inputFile = new FileName("input",lastThreeDigits, roundManager.getRound());
-//
-//            // 고유 파일 이름 생성
-//            String uniqueFileName = inputFile.getFileName();
-//            System.out.println("Saved as: " + uniqueFileName);
-//
-//            // 파일 저장
-//            File directory = new File(BASE_DIRECTORY);
-//            if (!directory.exists()) {
-//                directory.mkdirs(); // 폴더가 존재하지 않으면 생성
-//            }
+                String message = reader.readLine().trim();  // 메시지 수신
+                System.out.println("Received message: " + message);
 
-//            FileOutputStream fileOutputStream = new FileOutputStream(new File(directory, uniqueFileName));
-//
-//            byte[] buffer = new byte[8192];
-//            int bytesRead;
-//            while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                fileOutputStream.write(buffer, 0, bytesRead);
-//                fileSize += bytesRead; // 파일 크기 측정
-//            }
-//
-//            fileOutputStream.close();
+                String clientIp = clientSocket.getInetAddress().getHostAddress();
+                String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
+                String lastPart = ipParts[ipParts.length - 1];  // 마지막 부분을 가져옴
+                String lastThreeDigits = lastPart.length() > 3 ? lastPart.substring(lastPart.length() - 3) : lastPart;
 
-            // 응답 코드
-            OutputStream outputStream = clientSocket.getOutputStream();
-            outputStream.write(roundManager.getRound());
-            outputStream.flush();
 
-//            clientSocket.close();
+                System.out.println("test");
 
-            System.out.println("test");
-
-            // 클라이언트 완료 처리
-            roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
+                // 클라이언트 완료 처리
+                roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
