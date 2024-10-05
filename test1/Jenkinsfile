@@ -13,8 +13,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-              echo "Building image tag: docker.io/twkji/bulletin-board"
-              dir ('ch11/bulletin-board') {
+              echo "Building image tag: docker.io/twkji/file-server"
+              dir ('./') {
                 sh '''
                   buildctl --addr tcp://buildkitd:1234 \
                   build \
