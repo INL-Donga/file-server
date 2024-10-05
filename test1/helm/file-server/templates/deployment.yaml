@@ -21,6 +21,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 8080
+      - name: python-server
+        image: twkji/python-server:latest
+        imagePullPolicy: Always
         volumeMounts:
         - name: parameters-volume
           mountPath: /mnt/parameters
