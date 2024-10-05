@@ -43,12 +43,15 @@ public class MasterHandler implements Runnable {
 
                 System.out.println("send Round Number to client");
                 // 문제점 1. 클라이언트 정보를 받아와야 돼
-                for (Socket client : clientList) {
-                    OutputStream outputStream = client.getOutputStream();
-                    String msg = Integer.toString(roundManager.getRound());
-                    outputStream.write(msg.getBytes());
-                    outputStream.flush();
+                if(clientList.size() != 0){
+                    for (Socket client : clientList) {
+                        OutputStream outputStream = client.getOutputStream();
+                        String msg = Integer.toString(roundManager.getRound());
+                        outputStream.write(msg.getBytes());
+                        outputStream.flush();
+                    }
                 }
+
 
                 while (true) {
                     if (clientList.size() == roundManager.getCompletedClients()) {
