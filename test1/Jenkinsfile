@@ -19,8 +19,8 @@ pipeline {
                   buildctl --addr tcp://buildkitd:1234 \
                   build \
                   --frontend dockerfile.v0 \
-                  --local context=/var/jenkins_home/workspace/test/test1/build/libs \
-                  --local dockerfile=/var/jenkins_home/workspace/test/test1/build/libs \
+                  --local context=./build/libs \
+                  --local dockerfile=./build/libs \
                   --output type=image,name=docker.io/twkji/file-server,push=true
                 '''
               }
