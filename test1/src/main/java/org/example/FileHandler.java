@@ -25,7 +25,6 @@ class FileHandler implements Runnable {
             // localhost 의 .py 로 부터 .pt 업로드 완료 수신
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String message = in.readLine();
-            int number = Integer.parseInt(message);
 
             // 클라이언트로부터 텍스트(Round Number)를 수신
 //            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -75,8 +74,7 @@ class FileHandler implements Runnable {
 
             // 응답 코드
             OutputStream outputStream = clientSocket.getOutputStream();
-            String msg = "ok";
-            outputStream.write(msg.getBytes());
+            outputStream.write(roundManager.getRound());
             outputStream.flush();
 
 //            clientSocket.close();
