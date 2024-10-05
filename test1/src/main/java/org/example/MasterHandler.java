@@ -28,7 +28,6 @@ public class MasterHandler implements Runnable {
             while (true) {
                 // localhost 의 .py 로 부터 .pt 업로드 완료 수신
                 // 클라이언트로부터 파일을 수신
-                System.out.println("test1");
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
@@ -42,12 +41,11 @@ public class MasterHandler implements Runnable {
                     // 클라이언트로 보내기?
                 }
 
-                System.out.println("fdsfsdfds");
+                System.out.println("send Round Number to client");
                 // 문제점 1. 클라이언트 정보를 받아와야 돼
                 for (Socket client : clientList) {
                     OutputStream outputStream = client.getOutputStream();
-//                        String msg = Integer.toString(roundManager.getRound());
-                    String msg = "fsdfsdfsd";
+                    String msg = Integer.toString(roundManager.getRound());
                     outputStream.write(msg.getBytes());
                     outputStream.flush();
                 }
