@@ -15,7 +15,7 @@ pipeline {
             steps {
               echo "Building image tag: docker.io/twkji/bulletin-board"
               dir ('ch11/bulletin-board') {
-                sh 'chmod +x ci/build.sh && ./ci/build.sh'
+                sh 'buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --local context=/file-server/test1/build/libs --local dockerfile=/file-server/test1/build/libs --output type=image,name=docker.io/twkji/file-server,push=true'
               }
             }
         }
