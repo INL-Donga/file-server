@@ -16,7 +16,7 @@ public class FileServer {
     public static void main(String[] args) {
         RoundManager roundManager = RoundManager.getInstance();  // RoundManager 인스턴스 생성
 
-        try (ServerSocket serverSocket = new ServerSocket(8000)) {
+        try (ServerSocket serverSocket = new ServerSocket(8080)) {
             System.out.println("Server started. Waiting for connections...");
             System.out.println("Please enter 'start' to execute.");
             while (true) {
