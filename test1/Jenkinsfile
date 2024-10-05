@@ -34,7 +34,7 @@ pipeline {
                       --set registryServer=docker.io,registryUser=twkji \
                       --namespace default \
                       file-server \
-                  /var/jenkins_home/workspace/test/test1/helm/file-server'
+                  /helm/file-server'
               }
             }
         }
