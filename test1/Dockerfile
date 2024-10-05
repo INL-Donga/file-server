@@ -1,5 +1,5 @@
 # 1. 단계: 빌드 환경 설정
-FROM openjdk:17-jdk-alpine AS builder
+FROM openjdk:17-jdk-alpine AS build
 
 # 2. 작업 디렉토리 생성
 WORKDIR /app
