@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: file-server-deployment
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: {{ .Release.Name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: file-server
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: file-server
+        app: {{ .Release.Name }}
     spec:
       containers:
-      - name: file-server
-        image: twkji/file-server:latest
-        imagePullPolicy: Always
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -24,4 +26,4 @@ spec:
       volumes:
       - name: parameters-volume
         persistentVolumeClaim:
-          claimName: parmeters-volume-test
+          claimName: {{ .Values.persistentVolumeClaimName }}

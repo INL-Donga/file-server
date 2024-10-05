@@ -1,19 +1,13 @@
-replicaCount: 1
+replicas: 1
+
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  tag: "1.16.0"
+  repository: twkji/file-server
+  tag: latest
+  pullPolicy: Always
+
 service:
-  type: ClusterIP
-  port: 80
-ingress:
-  enabled: false
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-resources: {}
-nodeSelector: {}
-tolerations: []
-affinity: {}
+  type: NodePort
+  port: 8080
+  nodePort: 30007 # 30000~32767 범위 내에서 지정
+
+persistentVolumeClaimName: parmeters-volume-test
