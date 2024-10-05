@@ -38,9 +38,9 @@ public class MasterHandler implements Runnable {
 
                 if (Integer.parseInt(message) != roundManager.getRound()) {
                     System.out.println("round mismatch");
-                    System.exit(1); // 프로그램 비정상종료 종료
+//                    System.exit(1); // 프로그램 비정상종료 종료
                     // 클라이언트로 보내기?
-
+                }
                     // 문제점 1. 클라이언트 정보를 받아와야 돼
                     for (Socket client : clientList) {
                         OutputStream outputStream = client.getOutputStream();
@@ -62,7 +62,7 @@ public class MasterHandler implements Runnable {
 
                 }
 
-            }
+            
 
 
         } catch (IOException ex) {
