@@ -16,10 +16,7 @@ pipeline {
               echo "Building image tag: docker.io/twkji/bulletin-board"
               dir ('ch11/bulletin-board') {
                 sh '''
-                  buildctl --addr tcp://buildkitd.default.svc.cluster.local:1234 \
-                    --tlscacert /certs/ca.pem \
-                    --tlscert /certs/cert.pem \
-                    --tlskey /certs/key.pem \
+                  buildctl --addr tcp://buildkitd:1234 \
                   build \
                   --frontend dockerfile.v0 \
                   --local context=/var/jenkins_home/workspace/test/test1/build/libs \
