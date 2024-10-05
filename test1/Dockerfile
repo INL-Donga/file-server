@@ -6,7 +6,7 @@ WORKDIR /app
 
 # 3. 프로젝트의 모든 파일 복사
 COPY . .
-
+RUN chmod +x ./gradlew
 # 4. 프로젝트 빌드 (Gradle 사용)
 RUN ./gradlew clean build -x test
 
