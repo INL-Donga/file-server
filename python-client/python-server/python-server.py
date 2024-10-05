@@ -3,7 +3,7 @@ import time
 
 
 def send_msg_from_server():
-    server_address = ('localhost', 8080)  # 서버 주소 및 포트 설정
+    server_address = ('10.3.129.237', 30007)  # 서버 주소 및 포트 설정
     i = 0
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect(server_address)
