@@ -3,9 +3,6 @@ FROM gradle:7.6.0-jdk17 AS builder
 WORKDIR /var/jenkins_home/workspace/test/test1
 RUN pwd
 
-# Gradle Wrapper 실행 권한 설정
-RUN chmod +x /var/jenkins_home/workspace/test/test1/gradlew
-
 # 4. Gradle을 사용하여 프로젝트를 빌드하고 JAR 생성 (테스트 생략)
 RUN /var/jenkins_home/workspace/test/test1/gradlew build -x test 
 
