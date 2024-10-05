@@ -29,7 +29,7 @@ pipeline {
         stage('Run') {
             steps {
               echo "Deploying to test"
-              dir ('./test1') { # 위치 지정
+              dir ('./test1') { 
                 sh 'helm upgrade --install \
                       --atomic \
                       --set registryServer=docker.io,registryUser=twkji \
