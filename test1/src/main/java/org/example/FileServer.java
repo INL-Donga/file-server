@@ -20,25 +20,25 @@ public class FileServer {
             System.out.println("Server started. Waiting for connections...");
             System.out.println("Please enter 'start' to execute.");
 
-            // 사용자 입력을 처리하는 스레드
-            Thread inputThread = new Thread(() -> {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                try {
-                    while (true) {
-                        String userInput = reader.readLine();
-                        if ("start".equalsIgnoreCase(userInput)) {
-                            System.out.println("Total Clients : " + roundManager.getConnectedClients());
-                            System.out.println("Starting Progress...");
-                            isRunning = false;
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            inputThread.setDaemon(true);  // 백그라운드에서 실행되도록 설정
-            inputThread.start();
+//            // 사용자 입력을 처리하는 스레드
+//            Thread inputThread = new Thread(() -> {
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//                try {
+//                    while (true) {
+//                        String userInput = reader.readLine();
+//                        if ("start".equalsIgnoreCase(userInput)) {
+//                            System.out.println("Total Clients : " + roundManager.getConnectedClients());
+//                            System.out.println("Starting Progress...");
+//                            isRunning = false;
+//                            break;
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            inputThread.setDaemon(true);  // 백그라운드에서 실행되도록 설정
+//            inputThread.start();
 
             while (true) {
                 // 클라이언트의 연결을 기다림
