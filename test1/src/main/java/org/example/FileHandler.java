@@ -28,8 +28,16 @@ class FileHandler implements Runnable {
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-                String message = reader.readLine().trim();  // 메시지 수신
-                System.out.println("FileHandler Received message: " + message);
+                String message;
+                while ((message = reader.readLine()) != null) {  // null 체크를 통해 스트림의 끝을 확인
+                    message = message.trim();  // null이 아닐 때만 trim() 호출
+
+                    if (!message.isEmpty()) {
+                        System.out.println("FileHandler Received message: " + message);
+
+                        // 여기서 받은 메시지에 대한 추가 작업을 할 수 있습니다
+                    }
+
 
                 String clientIp = clientSocket.getInetAddress().getHostAddress();
                 String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
@@ -39,23 +47,15 @@ class FileHandler implements Runnable {
 
                 System.out.println("FileHandler End");
 
+                Thread.sleep(5);
                 // 클라이언트 완료 처리
                 roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
-
-    // 고유 파일 이름 생성 (원래 이름 + 타임스탬프)
-    private String generateUniqueFileName(String originalFileName) {
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        int dotIndex = originalFileName.lastIndexOf(".");
-        if (dotIndex != -1) {
-            return originalFileName.substring(0, dotIndex) + "_" + timestamp + originalFileName.substring(dotIndex);
-        } else {
-            return originalFileName + "_" + timestamp;
+    } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-    }
-}
+    }}
