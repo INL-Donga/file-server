@@ -17,9 +17,9 @@ pipeline {
               dir ('ch11/bulletin-board') {
                 sh '''
                   buildctl --addr tcp://buildkitd.default.svc.cluster.local:1234 \
-                    --tlscacert .certs/client/ca.pem \
-                    --tlscert .certs/client/cert.pem \
-                    --tlskey .certs/client/key.pem \
+                    --tlscacert /certs/client/ca.pem \
+                    --tlscert /certs/client/cert.pem \
+                    --tlskey /certs/client/key.pem \
                   build \
                   --frontend dockerfile.v0 \
                   --local context=/var/jenkins_home/workspace/test/test1/build/libs \
