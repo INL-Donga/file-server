@@ -30,7 +30,7 @@ pipeline {
             steps {
               echo "Deploying to test"
               dir ('./test1') { 
-                sh 'helm upgrade --install \
+                sh 'helm upgrade --install --atomic \
                       --atomic \
                       --set registryServer=docker.io,registryUser=twkji \
                       --namespace default \
