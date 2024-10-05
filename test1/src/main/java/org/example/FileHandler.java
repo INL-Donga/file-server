@@ -1,9 +1,6 @@
 package org.example;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -64,6 +61,11 @@ class FileHandler implements Runnable {
             }
 
             fileOutputStream.close();
+
+            OutputStream outputStream = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
+            writer.println("통신테스트");
+
             clientSocket.close();
 
             System.out.println("File received: " + uniqueFileName + " (" + fileSize + " bytes)");
