@@ -1,79 +1,56 @@
 package org.example;
 
+import org.example.RoundManager;
+
 import java.io.*;
 import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
-public class MasterHandler implements Runnable {
-
-    public static boolean isRunning = true;
-
-    public static int round;
+class MasterHandler implements Runnable {
     private final Socket clientSocket;
-    private static final String BASE_DIRECTORY = "D:\\INL\\backend\\test1\\parameters"; // 파일 저장 경로
-    private RoundManager roundManager;  // RoundManager 인스턴스
-    private static List<Socket> clientList = new ArrayList<>();
+    public static int round;
+    private static CountDownLatch latch;
+    private List<Socket> clientList;
+    private RoundManager roundManager;
 
     public MasterHandler(Socket socket, RoundManager roundManager, List<Socket> clientList) {
         this.clientSocket = socket;
         this.roundManager = roundManager;
         this.clientList = clientList;
+        latch = new CountDownLatch(clientList.size());
     }
 
     @Override
     public void run() {
         try {
-
             InputStream inputStream = clientSocket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             while (true) {
-                // localhost 의 .py 로 부터 .pt 업로드 완료 수신
-                // 마스터로부터 수신
-
-
-                String message = reader.readLine();  // 메시지 수신
-                if(message != null){
+                // 마스터로부터 라운드 수신
+                String message = reader.readLine();
+                if (message != null) {
                     message = message.trim();
                     System.out.println("[MasterHandler] : Server.py로 부터 라운드를 받았습니다: " + message);
                     round = Integer.parseInt(message);
-                    isRunning= false;
                 }
 
-                System.out.println("================ round :" + round + " ================" );
+                System.out.println("================ round :" + round + " ================");
 
-                while (true){
-                    if(isRunning) break;
-                }
+                // 모든 클라이언트가 완료될 때까지 대기
+                latch.await();
 
-                while(true) {
-                    if (roundManager.getConnectedClients() == roundManager.getCompletedClients() && clientList.size() != 0) {
-                        // Server.py 에게 완료된 클라이언트 수 주기
-                        isRunning = true;
-                        write(clientSocket, Integer.toString(roundManager.getConnectedClients()));
-                        write(clientSocket, "complete");
-                        System.out.println("[MasterHandler] : Server.py 에게 완료 신호를 보냈습니다.");
-                        System.out.println(isRunning);
-                        isRunning = false;
-                        System.out.println(isRunning);
-                        break;
-                    }
-                }
+                // Server.py 에 완료 신호 전송
+                write(clientSocket, Integer.toString(roundManager.getConnectedClients()));
+                write(clientSocket, "complete");
+                System.out.println("[MasterHandler] : Server.py 에게 완료 신호를 보냈습니다.");
 
-//                while (true){
-//                    if(isRunning) break;
-//                }
-//
-//                System.out.println("after while");
-
+                // 다음 라운드로 진행
+                latch = new CountDownLatch(clientList.size());
             }
 
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -82,5 +59,9 @@ public class MasterHandler implements Runnable {
         OutputStream outputStream = clientSocket.getOutputStream();
         outputStream.write(msg.getBytes());
         outputStream.flush();
+    }
+
+    public static void countDown() {
+        latch.countDown();
     }
 }
