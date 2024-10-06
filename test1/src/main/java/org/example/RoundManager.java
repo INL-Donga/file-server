@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RoundManager {
 
 
+    public static boolean isBool = false;
+
     private static RoundManager instance = null;
     private AtomicInteger round;  // 현재 라운드
     private AtomicInteger connectedClients;  // 현재 연결된 클라이언트 수
@@ -46,8 +48,9 @@ public class RoundManager {
         // 모든 클라이언트가 완료된 경우 다음 라운드로 넘어감
         if (completed == connectedClients.get()) {
 //            System.out.println("[RoundManager] : All clients completed. Proceeding to next round.");
-            nextRound();  // 모든 클라이언트가 완료되면 다음 라운드로 진행
-
+            MasterHandler.isRunning = true;
+            System.out.println("rm : "+MasterHandler.isRunning);
+            System.out.println("Complete ALL");
         }
     }
 
