@@ -25,31 +25,34 @@ public class MasterHandler implements Runnable {
     @Override
     public void run() {
         try {
+
+            InputStream inputStream = clientSocket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             while (true) {
                 // localhost 의 .py 로 부터 .pt 업로드 완료 수신
                 // 마스터로부터 수신
-                InputStream inputStream = clientSocket.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
 
                 String message = reader.readLine().trim();  // 메시지 수신
-                System.out.println("[Received message from master]: " + message + "_" + clientSocket.getInetAddress());
+                System.out.println("[MasterHandler] : Server.py로 부터 메시지를 받았습니다: " + message);
 
 
                 if (Integer.parseInt(message) != roundManager.getRound()) {
-                    System.out.println("[]round mismatch");
+                    System.out.println("[MasterHandler] : round mismatch");
 //                    System.exit(1); // 프로그램 비정상종료 종료
-                    // 클라이언트로 보내기?
                 }
 
 
 
                 while(true) {
                     if (roundManager.getConnectedClients() == roundManager.getCompletedClients() && clientList.size() != 0) {
-                        write(clientSocket, Integer.toString(roundManager.getCompletedClients()));
-                        System.out.println("round - completed : " + roundManager.getCompletedClients() + "connected:" + roundManager.getConnectedClients());
+                        // Server.py 에게 완료된 클라이언트 수 주기
+                        write(clientSocket, Integer.toString(roundManager.getConnectedClients()));
+                        System.out.println("[MasterHandler] : 완료 수: " + roundManager.getCompletedClients() + "연결 수:" + roundManager.getConnectedClients());
 //                        String message1 = reader.readLine().trim();  // 메시지 수신
                         write(clientSocket, "complete");
-                        System.out.println("send to master complete message and client counts");
+                        System.out.println("[MasterHandler] : Server.py 에게 완료 신호를 보냈습니다.");
+
                         break;
                     }
                 }

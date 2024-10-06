@@ -21,12 +21,12 @@ public class FileServer {
         RoundManager roundManager = RoundManager.getInstance();  // RoundManager 인스턴스 생성
 
         try (ServerSocket serverSocket = new ServerSocket(9090)) {
-            System.out.println("Server started. Waiting for connections...");
-            System.out.println("Please enter 'start' to execute.");
+            System.out.println("[FileServer] : Server started. Waiting for connections...");
+            System.out.println("[FileServer] : Please enter 'start' to execute.");
             while (true) {
                 // 클라이언트의 연결을 기다림
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted Socket: " + clientSocket.getInetAddress());
+                System.out.println("[FileServer] : Accepted Socket: " + clientSocket.getInetAddress());
 
                 // Master Node Server.py 체크
                 if (clientSocket.getInetAddress().getHostAddress().equals("127.0.0.1")) {
@@ -40,13 +40,15 @@ public class FileServer {
                     }
 
 
+                    /// 여기서 클라이언트한테 고유번호 주기
+
 //                    OutputStream outputStream = clientSocket.getOutputStream();
 //                    String msg = Integer.toString(FileServer.client_count);
 //                    FileServer.client_count++;
 //                    outputStream.write(msg.getBytes());
 //                    outputStream.flush();
 
-                    System.out.println("Client connected. Total connected clients: " + roundManager.getConnectedClients());
+                    System.out.println("[FileServer] : Client connected. Total connected clients: " + roundManager.getConnectedClients());
                 }
 
 
@@ -54,5 +56,11 @@ public class FileServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void write(Socket clientSocket, String msg) throws IOException {
+        OutputStream outputStream = clientSocket.getOutputStream();
+        outputStream.write(msg.getBytes());
+        outputStream.flush();
     }
 }

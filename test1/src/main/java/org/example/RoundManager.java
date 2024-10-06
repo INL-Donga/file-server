@@ -3,6 +3,8 @@ package org.example;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundManager {
+
+
     private static RoundManager instance = null;
     private AtomicInteger round;  // 현재 라운드
     private AtomicInteger connectedClients;  // 현재 연결된 클라이언트 수
@@ -39,12 +41,13 @@ public class RoundManager {
     // 클라이언트가 파일 전송을 완료할 때마다 호출
     public synchronized void clientCompleted() {
         int completed = completedClients.incrementAndGet();
-        System.out.println("Completed clients in this round: " + completed + "/" + connectedClients.get());
+//        System.out.println("[RoundManager] : Completed clients in this round: " + completed + "/" + connectedClients.get());
 
         // 모든 클라이언트가 완료된 경우 다음 라운드로 넘어감
         if (completed == connectedClients.get()) {
-            System.out.println("All clients completed. Proceeding to next round.");
+//            System.out.println("[RoundManager] : All clients completed. Proceeding to next round.");
             nextRound();  // 모든 클라이언트가 완료되면 다음 라운드로 진행
+
         }
     }
 
@@ -52,7 +55,7 @@ public class RoundManager {
     private void nextRound() {
         round.incrementAndGet();  // 라운드 증가
         completedClients.set(0);  // 완료된 클라이언트 수 초기화
-        System.out.println("Round updated to: " + round.get());
+        System.out.println("[RoundManager] : Round updated to: " + round.get());
     }
 
     public int getCompletedClients() {return completedClients.get();};

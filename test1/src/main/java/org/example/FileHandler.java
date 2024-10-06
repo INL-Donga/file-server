@@ -22,31 +22,28 @@ class FileHandler implements Runnable {
         try {
             write(clientSocket,Integer.toString(roundManager.getRound()) );
 
+            System.out.println("[FileHandler] : 클라이언트에게 라운드 수 정보를 줍니다. : "+ roundManager.getRound());
+            InputStream inputStream = clientSocket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
             while (true) {
+
 
                 if(!FileServer.isRunning) continue;
 
-                InputStream inputStream = clientSocket.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-
-                String message;
-                while ((message = reader.readLine()) != null) {  // null 체크를 통해 스트림의 끝을 확인
-                    message = message.trim();  // null이 아닐 때만 trim() 호출
-
-                    if (!message.isEmpty()) {
-                        System.out.println("FileHandler Received message: " + message);
-
-                        // 여기서 받은 메시지에 대한 추가 작업을 할 수 있습니다
-                    }
 
 
-                String clientIp = clientSocket.getInetAddress().getHostAddress();
-                String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
-                String lastPart = ipParts[ipParts.length - 1];  // 마지막 부분을 가져옴
-                String lastThreeDigits = lastPart.length() > 3 ? lastPart.substring(lastPart.length() - 3) : lastPart;
+                String message = reader.readLine();
+                if(message != null){
+                    message = message.trim();
+                    System.out.println("[FileHandler] : 클라이언트로부터 데이터를 읽었습니다 : " + message);
+                }
 
 
-                System.out.println("FileHandler End");
+//                String clientIp = clientSocket.getInetAddress().getHostAddress();
+//                String[] ipParts = clientIp.split("\\.");  // IP 주소를 '.'으로 분리
+//                String lastPart = ipParts[ipParts.length - 1];  // 마지막 부분을 가져옴
+//                String lastThreeDigits = lastPart.length() > 3 ? lastPart.substring(lastPart.length() - 3) : lastPart;
 
                 Thread.sleep(5);
                 // 클라이언트 완료 처리
@@ -54,13 +51,13 @@ class FileHandler implements Runnable {
                 write(clientSocket,Integer.toString(1));
             }
 
-        }
-    } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
         }
     }
+
     public void write(Socket clientSocket, String msg) throws IOException {
         OutputStream outputStream = clientSocket.getOutputStream();
         outputStream.write(msg.getBytes());
