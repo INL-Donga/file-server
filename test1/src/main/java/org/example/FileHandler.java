@@ -20,10 +20,11 @@ class FileHandler implements Runnable {
     public void run() {
 
         try {
+            write(clientSocket,Integer.toString(roundManager.getRound()) );
 
             while (true) {
 
-//                if(!FileServer.isRunning) continue;
+                if(!FileServer.isRunning) continue;
 
                 InputStream inputStream = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
@@ -50,10 +51,7 @@ class FileHandler implements Runnable {
                 Thread.sleep(5);
                 // 클라이언트 완료 처리
                 roundManager.clientCompleted();  // 라운드 매니저에 완료 알림
-                    OutputStream outputStream = clientSocket.getOutputStream();
-                    String msg = Integer.toString(roundManager.getRound());
-                    outputStream.write(msg.getBytes());
-                    outputStream.flush();
+                write(clientSocket,Integer.toString(1));
             }
 
         }
@@ -62,4 +60,11 @@ class FileHandler implements Runnable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }}
+    }
+    public void write(Socket clientSocket, String msg) throws IOException {
+        OutputStream outputStream = clientSocket.getOutputStream();
+        outputStream.write(msg.getBytes());
+        outputStream.flush();
+    }
+
+}

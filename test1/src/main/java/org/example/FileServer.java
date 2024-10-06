@@ -31,6 +31,7 @@ public class FileServer {
                 // Master Node Server.py 체크
                 if (clientSocket.getInetAddress().getHostAddress().equals("127.0.0.1")) {
                     new Thread(new MasterHandler(clientSocket, roundManager, clientList)).start();
+                    FileServer.isRunning=true;
                 } else {
                     // 새로운 클라이언트 연결을 처리할 스레드 생성
                     new Thread(new FileHandler(clientSocket, roundManager)).start();
@@ -39,11 +40,11 @@ public class FileServer {
                     }
 
 
-                    OutputStream outputStream = clientSocket.getOutputStream();
-                    String msg = Integer.toString(FileServer.client_count);
-                    FileServer.client_count++;
-                    outputStream.write(msg.getBytes());
-                    outputStream.flush();
+//                    OutputStream outputStream = clientSocket.getOutputStream();
+//                    String msg = Integer.toString(FileServer.client_count);
+//                    FileServer.client_count++;
+//                    outputStream.write(msg.getBytes());
+//                    outputStream.flush();
 
                     System.out.println("Client connected. Total connected clients: " + roundManager.getConnectedClients());
                 }

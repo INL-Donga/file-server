@@ -32,7 +32,7 @@ public class MasterHandler implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                 String message = reader.readLine().trim();  // 메시지 수신
-                System.out.println("Received message from master: " + message + "_" + clientSocket.getInetAddress());
+                System.out.println("[Received message from master]: " + message + "_" + clientSocket.getInetAddress());
 
 
                 if (Integer.parseInt(message) != roundManager.getRound()) {
@@ -42,31 +42,28 @@ public class MasterHandler implements Runnable {
                 }
 
 
- 
 
-                while (true) {
-
-                    String message1 = reader.readLine().trim();  // 메시지 수신
-
-                    System.out.println("Received message from master: " + message1 + "_" + clientSocket.getInetAddress());
-                    if (roundManager.getConnectedClients() == roundManager.getCompletedClients() && clientList.size()!=0) {
+                while(true) {
+                    if (roundManager.getConnectedClients() == roundManager.getCompletedClients() && clientList.size() != 0) {
+                        write(clientSocket, Integer.toString(roundManager.getCompletedClients()));
+                        System.out.println("round - completed : " + roundManager.getCompletedClients() + "connected:" + roundManager.getConnectedClients());
+//                        String message1 = reader.readLine().trim();  // 메시지 수신
+                        write(clientSocket, "complete");
                         System.out.println("send to master complete message and client counts");
-                        OutputStream outputStream = clientSocket.getOutputStream();
-                        String msg = "complete ";
-                        outputStream.write(msg.getBytes());
-                        outputStream.write(roundManager.getConnectedClients());
-                        outputStream.flush();
                         break;
                     }
                 }
 
             }
 
-
-
-
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public void write(Socket clientSocket, String msg) throws IOException {
+        OutputStream outputStream = clientSocket.getOutputStream();
+        outputStream.write(msg.getBytes());
+        outputStream.flush();
     }
 }
